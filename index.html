@@ -3,91 +3,98 @@
 <head>
 
 <meta charset="UTF-8">
-<title>Kitchen Configurator</title>
+<title>Kitchen Calculator</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
 
 body{
-
-background:#000;
-color:white;
+margin:0;
 font-family:-apple-system,BlinkMacSystemFont;
-padding:25px;
-text-align:center;
+color:white;
+background:url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c") center/cover no-repeat;
+}
 
+.container{
+background:rgba(0,0,0,0.75);
+height:100vh;
+padding:30px;
+text-align:center;
 }
 
 h1{
-font-weight:600;
 margin-bottom:5px;
 }
 
-.section{
-margin-top:30px;
+.progress{
+height:6px;
+background:#333;
+border-radius:5px;
+margin-bottom:30px;
+}
+
+.bar{
+height:6px;
+background:white;
+width:20%;
+border-radius:5px;
+}
+
+.screen{
+display:none;
+}
+
+.active{
+display:block;
 }
 
 .cards{
 display:flex;
-gap:12px;
 flex-wrap:wrap;
 justify-content:center;
+gap:15px;
 }
 
 .card{
-
-width:150px;
+width:160px;
 background:#111;
 border-radius:16px;
-padding:10px;
+overflow:hidden;
 cursor:pointer;
-transition:0.25s;
-
+transition:0.2s;
 }
 
 .card:hover{
-background:#1f1f1f;
+transform:scale(1.05);
 }
 
 .card img{
 width:100%;
-border-radius:10px;
+height:100px;
+object-fit:cover;
 }
 
-.selected{
-outline:2px solid white;
+.card p{
+padding:10px;
 }
 
 input{
-
-width:260px;
 padding:14px;
-margin-top:10px;
-border-radius:12px;
 border:none;
-background:#111;
-color:white;
-font-size:15px;
-
+border-radius:10px;
+margin-top:20px;
+width:220px;
 }
 
 button{
-
 margin-top:20px;
-padding:16px;
-width:260px;
+padding:15px;
 border:none;
-border-radius:14px;
-font-size:16px;
+border-radius:12px;
 background:white;
 cursor:pointer;
-
-}
-
-#result{
-font-size:26px;
-margin-top:20px;
+font-size:15px;
 }
 
 </style>
@@ -96,27 +103,96 @@ margin-top:20px;
 
 <body>
 
-<h1>Кухня на заказ</h1>
-<p>Соберите кухню и узнайте цену</p>
+<div class="container">
 
-<div class="section">
+<h1>Расчет кухни</h1>
 
-<h3>Фурнитура</h3>
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
+
+
+<!-- экран 1 -->
+
+<div class="screen active" id="s1">
+
+<h2>Тип кухни</h2>
 
 <div class="cards">
 
-<div class="card" onclick="select('furniture',2000,this)">
-<img src="https://i.imgur.com/uh1Y7aE.jpg">
+<div class="card" onclick="select('type','Прямая',2)">
+<img src="https://images.unsplash.com/photo-1600607687644-c94bf1c08b7d">
+<p>Прямая</p>
+</div>
+
+<div class="card" onclick="select('type','Угловая',2)">
+<img src="https://images.unsplash.com/photo-1560185127-6ed189bf02f4">
+<p>Угловая</p>
+</div>
+
+<div class="card" onclick="select('type','П-образная',2)">
+<img src="https://images.unsplash.com/photo-1600566752355-35792bedcfea">
+<p>П-образная</p>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- экран 2 -->
+
+<div class="screen" id="s2">
+
+<h2>Материал фасадов</h2>
+
+<div class="cards">
+
+<div class="card" onclick="select('facade','ЛДСП',3)">
+<img src="https://images.unsplash.com/photo-1556911220-bff31c812dba">
+<p>ЛДСП</p>
+</div>
+
+<div class="card" onclick="select('facade','МДФ',3)">
+<img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c">
+<p>МДФ</p>
+</div>
+
+<div class="card" onclick="select('facade','Эмаль',3)">
+<img src="https://images.unsplash.com/photo-1588854337118-1c3b1cbeaf77">
+<p>Эмаль</p>
+</div>
+
+<div class="card" onclick="select('facade','Шпон',3)">
+<img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d">
+<p>Шпон</p>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- экран 3 -->
+
+<div class="screen" id="s3">
+
+<h2>Фурнитура</h2>
+
+<div class="cards">
+
+<div class="card" onclick="select('furniture','Boyard',4)">
+<img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png">
 <p>Boyard</p>
 </div>
 
-<div class="card" onclick="select('furniture',5000,this)">
-<img src="https://i.imgur.com/Yo8JpYb.jpg">
+<div class="card" onclick="select('furniture','GTV',4)">
+<img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png">
 <p>GTV</p>
 </div>
 
-<div class="card" onclick="select('furniture',12000,this)">
-<img src="https://i.imgur.com/Z0qXq8M.jpg">
+<div class="card" onclick="select('furniture','Blum',4)">
+<img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png">
 <p>Blum</p>
 </div>
 
@@ -125,81 +201,85 @@ margin-top:20px;
 </div>
 
 
-<div class="section">
+<!-- экран 4 -->
 
-<h3>Размер кухни</h3>
+<div class="screen" id="s4">
+
+<h2>Размер кухни</h2>
 
 <input id="size" placeholder="например 3 метра">
 
+<br>
+
+<button onclick="next()">Далее</button>
+
 </div>
 
-<button onclick="calc()">Рассчитать цену</button>
 
-<div id="result"></div>
+<!-- экран 5 -->
 
+<div class="screen" id="s5">
 
-<div class="section">
+<h2>Оставьте заявку</h2>
 
-<h3>Оставьте заявку</h3>
-
-<input id="name" placeholder="Ваше имя">
+<input id="name" placeholder="Имя">
 
 <br>
 
 <input id="phone" placeholder="Телефон">
 
-</div>
+<br>
 
 <button onclick="send()">Отправить заявку</button>
+
+</div>
+
+</div>
 
 
 <script>
 
-let config={
+let data={}
+let step=1
 
-furniture:2000
+function updateBar(){
 
-}
-
-let totalPrice=0
-
-function select(name,value,element){
-
-config[name]=value
-
-let cards=element.parentElement.querySelectorAll(".card")
-
-cards.forEach(c=>c.classList.remove("selected"))
-
-element.classList.add("selected")
+document.getElementById("bar").style.width=(step*20)+"%"
 
 }
 
-function calc(){
+function select(key,value,next){
 
-let size=document.getElementById("size").value
+data[key]=value
+step=next-1
+updateBar()
+show(next)
 
-totalPrice=(size*10000)+config.furniture
+}
 
-document.getElementById("result").innerHTML=
+function show(id){
 
-"Примерная стоимость: "+Math.round(totalPrice)+" ₽"
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"))
+
+document.getElementById("s"+id).classList.add("active")
+
+}
+
+function next(){
+
+data.size=document.getElementById("size").value
+
+step=4
+updateBar()
+
+show(5)
 
 }
 
 function send(){
 
-let name=document.getElementById("name").value
-
-let phone=document.getElementById("phone").value
-
-let data={
-
-name:name,
-phone:phone,
-price:totalPrice
-
-}
+data.name=document.getElementById("name").value
+data.phone=document.getElementById("phone").value
 
 Telegram.WebApp.sendData(JSON.stringify(data))
 
@@ -209,3 +289,4 @@ Telegram.WebApp.sendData(JSON.stringify(data))
 
 </body>
 </html>
+
