@@ -3,38 +3,91 @@
 <head>
 
 <meta charset="UTF-8">
-<title>Калькулятор кухни</title>
+<title>Kitchen Configurator</title>
+
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
 
 body{
-background:#0f0f0f;
+
+background:#000;
 color:white;
-font-family:Arial;
+font-family:-apple-system,BlinkMacSystemFont;
+padding:25px;
 text-align:center;
-padding:30px;
-}
 
-input,select{
-padding:12px;
-margin:10px;
-width:220px;
-border:none;
-border-radius:6px;
-}
-
-button{
-padding:12px 30px;
-background:white;
-border:none;
-border-radius:6px;
-font-size:16px;
-cursor:pointer;
 }
 
 h1{
-margin-bottom:30px;
+font-weight:600;
+margin-bottom:5px;
+}
+
+.section{
+margin-top:30px;
+}
+
+.cards{
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+justify-content:center;
+}
+
+.card{
+
+width:150px;
+background:#111;
+border-radius:16px;
+padding:10px;
+cursor:pointer;
+transition:0.25s;
+
+}
+
+.card:hover{
+background:#1f1f1f;
+}
+
+.card img{
+width:100%;
+border-radius:10px;
+}
+
+.selected{
+outline:2px solid white;
+}
+
+input{
+
+width:260px;
+padding:14px;
+margin-top:10px;
+border-radius:12px;
+border:none;
+background:#111;
+color:white;
+font-size:15px;
+
+}
+
+button{
+
+margin-top:20px;
+padding:16px;
+width:260px;
+border:none;
+border-radius:14px;
+font-size:16px;
+background:white;
+cursor:pointer;
+
+}
+
+#result{
+font-size:26px;
+margin-top:20px;
 }
 
 </style>
@@ -43,49 +96,112 @@ margin-bottom:30px;
 
 <body>
 
-<h1>Калькулятор кухни</h1>
+<h1>Кухня на заказ</h1>
+<p>Соберите кухню и узнайте цену</p>
 
-<input id="size" placeholder="Длина кухни (м)">
+<div class="section">
+
+<h3>Фурнитура</h3>
+
+<div class="cards">
+
+<div class="card" onclick="select('furniture',2000,this)">
+<img src="https://i.imgur.com/uh1Y7aE.jpg">
+<p>Boyard</p>
+</div>
+
+<div class="card" onclick="select('furniture',5000,this)">
+<img src="https://i.imgur.com/Yo8JpYb.jpg">
+<p>GTV</p>
+</div>
+
+<div class="card" onclick="select('furniture',12000,this)">
+<img src="https://i.imgur.com/Z0qXq8M.jpg">
+<p>Blum</p>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="section">
+
+<h3>Размер кухни</h3>
+
+<input id="size" placeholder="например 3 метра">
+
+</div>
+
+<button onclick="calc()">Рассчитать цену</button>
+
+<div id="result"></div>
+
+
+<div class="section">
+
+<h3>Оставьте заявку</h3>
+
+<input id="name" placeholder="Ваше имя">
 
 <br>
 
-<select id="facade">
+<input id="phone" placeholder="Телефон">
 
-<option value="8000">ЛДСП фасады</option>
-<option value="15000">МДФ пленка</option>
-<option value="25000">Эмаль</option>
+</div>
 
-</select>
+<button onclick="send()">Отправить заявку</button>
 
-<br>
-
-<select id="furniture">
-
-<option value="3000">Обычная фурнитура</option>
-<option value="8000">Blum</option>
-
-</select>
-
-<br><br>
-
-<button onclick="calc()">Рассчитать</button>
-
-<h2 id="result"></h2>
 
 <script>
+
+let config={
+
+furniture:2000
+
+}
+
+let totalPrice=0
+
+function select(name,value,element){
+
+config[name]=value
+
+let cards=element.parentElement.querySelectorAll(".card")
+
+cards.forEach(c=>c.classList.remove("selected"))
+
+element.classList.add("selected")
+
+}
 
 function calc(){
 
 let size=document.getElementById("size").value
 
-let facade=document.getElementById("facade").value
-
-let furniture=document.getElementById("furniture").value
-
-let price=(size*facade)+Number(furniture)
+totalPrice=(size*10000)+config.furniture
 
 document.getElementById("result").innerHTML=
-"Примерная стоимость: "+price+" ₽"
+
+"Примерная стоимость: "+Math.round(totalPrice)+" ₽"
+
+}
+
+function send(){
+
+let name=document.getElementById("name").value
+
+let phone=document.getElementById("phone").value
+
+let data={
+
+name:name,
+phone:phone,
+price:totalPrice
+
+}
+
+Telegram.WebApp.sendData(JSON.stringify(data))
 
 }
 
