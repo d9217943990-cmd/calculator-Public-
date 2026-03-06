@@ -1,68 +1,51 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
 <meta charset="UTF-8">
-<title>Kitchen Calculator</title>
+
+<title>Калькулятор кухни</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
 
 body{
+font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+background:#f2f2f7;
 margin:0;
-font-family:-apple-system,BlinkMacSystemFont;
-color:white;
-background:url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c") center/cover no-repeat;
-}
-
-.container{
-background:rgba(0,0,0,0.75);
-height:100vh;
-padding:30px;
-text-align:center;
-}
-
-h1{
-margin-bottom:5px;
-}
-
-.progress{
-height:6px;
-background:#333;
-border-radius:5px;
-margin-bottom:30px;
-}
-
-.bar{
-height:6px;
-background:white;
-width:20%;
-border-radius:5px;
+padding:0;
 }
 
 .screen{
 display:none;
+padding:30px;
 }
 
 .active{
 display:block;
 }
 
-.cards{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:15px;
+h1{
+font-size:26px;
+margin-bottom:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:16px;
 }
 
 .card{
-width:160px;
-background:#111;
-border-radius:16px;
-overflow:hidden;
-cursor:pointer;
+background:white;
+border-radius:22px;
+padding:20px;
+text-align:center;
+box-shadow:0 8px 20px rgba(0,0,0,0.06);
 transition:0.2s;
+cursor:pointer;
 }
 
 .card:hover{
@@ -70,31 +53,39 @@ transform:scale(1.05);
 }
 
 .card img{
-width:100%;
-height:100px;
-object-fit:cover;
+width:90px;
+margin-bottom:10px;
 }
 
-.card p{
-padding:10px;
+.button{
+background:black;
+color:white;
+padding:16px;
+border-radius:16px;
+margin-top:25px;
+text-align:center;
+font-size:18px;
+cursor:pointer;
 }
 
 input{
-padding:14px;
-border:none;
-border-radius:10px;
-margin-top:20px;
-width:220px;
+width:100%;
+padding:16px;
+border-radius:14px;
+border:1px solid #ddd;
+font-size:16px;
+margin-top:10px;
 }
 
-button{
+.slider{
+width:100%;
+margin-top:30px;
+}
+
+.price{
+font-size:32px;
+font-weight:600;
 margin-top:20px;
-padding:15px;
-border:none;
-border-radius:12px;
-background:white;
-cursor:pointer;
-font-size:15px;
 }
 
 </style>
@@ -103,68 +94,82 @@ font-size:15px;
 
 <body>
 
-<div class="container">
+<!-- Форма кухни -->
 
-<h1>Расчет кухни</h1>
+<div class="screen active" id="step1">
 
-<div class="progress">
-<div class="bar" id="bar"></div>
-</div>
+<h1>Форма кухни</h1>
 
+<div class="grid">
 
-<!-- экран 1 -->
-
-<div class="screen active" id="s1">
-
-<h2>Тип кухни</h2>
-
-<div class="cards">
-
-<div class="card" onclick="select('type','Прямая',2)">
-<img src="https://images.unsplash.com/photo-1600607687644-c94bf1c08b7d">
+<div class="card" onclick="setShape('Прямая')">
+<img src="https://img.icons8.com/fluency/96/kitchen-room.png">
 <p>Прямая</p>
 </div>
 
-<div class="card" onclick="select('type','Угловая',2)">
-<img src="https://images.unsplash.com/photo-1560185127-6ed189bf02f4">
+<div class="card" onclick="setShape('Угловая')">
+<img src="https://img.icons8.com/fluency/96/kitchen.png">
 <p>Угловая</p>
 </div>
 
-<div class="card" onclick="select('type','П-образная',2)">
-<img src="https://images.unsplash.com/photo-1600566752355-35792bedcfea">
+<div class="card" onclick="setShape('П-образная')">
+<img src="https://img.icons8.com/fluency/96/kitchen-room.png">
 <p>П-образная</p>
 </div>
 
+<div class="card" onclick="setShape('С островом')">
+<img src="https://img.icons8.com/fluency/96/kitchen.png">
+<p>С островом</p>
 </div>
 
 </div>
 
+</div>
 
-<!-- экран 2 -->
+<!-- Длина кухни -->
 
-<div class="screen" id="s2">
+<div class="screen" id="step2">
 
-<h2>Материал фасадов</h2>
+<h1>Длина кухни</h1>
 
-<div class="cards">
+<p id="lengthValue">3 м</p>
 
-<div class="card" onclick="select('facade','ЛДСП',3)">
-<img src="https://images.unsplash.com/photo-1556911220-bff31c812dba">
+<input type="range" min="2" max="8" step="0.1" value="3" class="slider" id="lengthSlider">
+
+<div class="button" onclick="nextStep(3)">Далее</div>
+
+</div>
+
+<!-- Материал -->
+
+<div class="screen" id="step3">
+
+<h1>Материал фасадов</h1>
+
+<div class="grid">
+
+<div class="card" onclick="setMaterial('ЛДСП',0)">
+<img src="https://img.icons8.com/fluency/96/wood.png">
 <p>ЛДСП</p>
 </div>
 
-<div class="card" onclick="select('facade','МДФ',3)">
-<img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c">
-<p>МДФ</p>
+<div class="card" onclick="setMaterial('МДФ плёнка',20000)">
+<img src="https://img.icons8.com/fluency/96/kitchen.png">
+<p>МДФ плёнка</p>
 </div>
 
-<div class="card" onclick="select('facade','Эмаль',3)">
-<img src="https://images.unsplash.com/photo-1588854337118-1c3b1cbeaf77">
-<p>Эмаль</p>
+<div class="card" onclick="setMaterial('МДФ пластик',40000)">
+<img src="https://img.icons8.com/fluency/96/material.png">
+<p>МДФ пластик</p>
 </div>
 
-<div class="card" onclick="select('facade','Шпон',3)">
-<img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d">
+<div class="card" onclick="setMaterial('МДФ эмаль',60000)">
+<img src="https://img.icons8.com/fluency/96/paint-palette.png">
+<p>МДФ эмаль</p>
+</div>
+
+<div class="card" onclick="setMaterial('Шпон',80000)">
+<img src="https://img.icons8.com/fluency/96/tree.png">
 <p>Шпон</p>
 </div>
 
@@ -172,27 +177,53 @@ font-size:15px;
 
 </div>
 
+<!-- Столешница -->
 
-<!-- экран 3 -->
+<div class="screen" id="step4">
 
-<div class="screen" id="s3">
+<h1>Столешница</h1>
 
-<h2>Фурнитура</h2>
+<div class="grid">
 
-<div class="cards">
+<div class="card" onclick="setCountertop('ЛДСП 38мм',10000)">
+<img src="https://img.icons8.com/fluency/96/table.png">
+<p>ЛДСП 38мм</p>
+</div>
 
-<div class="card" onclick="select('furniture','Boyard',4)">
-<img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png">
+<div class="card" onclick="setCountertop('Компакт HPL',30000)">
+<img src="https://img.icons8.com/fluency/96/granite.png">
+<p>Компакт HPL</p>
+</div>
+
+<div class="card" onclick="setCountertop('Камень',40000)">
+<img src="https://img.icons8.com/fluency/96/rock.png">
+<p>Камень</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- Фурнитура -->
+
+<div class="screen" id="step5">
+
+<h1>Фурнитура</h1>
+
+<div class="grid">
+
+<div class="card" onclick="setHardware('Boyard',0)">
+<img src="https://img.icons8.com/fluency/96/settings.png">
 <p>Boyard</p>
 </div>
 
-<div class="card" onclick="select('furniture','GTV',4)">
-<img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png">
+<div class="card" onclick="setHardware('GTV',20000)">
+<img src="https://img.icons8.com/fluency/96/gear.png">
 <p>GTV</p>
 </div>
 
-<div class="card" onclick="select('furniture','Blum',4)">
-<img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png">
+<div class="card" onclick="setHardware('Blum',40000)">
+<img src="https://img.icons8.com/fluency/96/premium.png">
 <p>Blum</p>
 </div>
 
@@ -200,88 +231,138 @@ font-size:15px;
 
 </div>
 
+<!-- Результат -->
 
-<!-- экран 4 -->
+<div class="screen" id="step6">
 
-<div class="screen" id="s4">
+<h1>Стоимость кухни</h1>
 
-<h2>Размер кухни</h2>
+<div class="price" id="result"></div>
 
-<input id="size" placeholder="например 3 метра">
-
-<br>
-
-<button onclick="next()">Далее</button>
+<div class="button" onclick="nextStep(7)">
+Оставить контакты
+</div>
 
 </div>
 
+<!-- Контакты -->
 
-<!-- экран 5 -->
+<div class="screen" id="step7">
 
-<div class="screen" id="s5">
+<h1>Ваши контакты</h1>
 
-<h2>Оставьте заявку</h2>
-
-<input id="name" placeholder="Имя">
-
-<br>
+<input id="name" placeholder="Ваше имя">
 
 <input id="phone" placeholder="Телефон">
 
-<br>
-
-<button onclick="send()">Отправить заявку</button>
-
+<div class="button" onclick="sendLead()">
+Отправить
 </div>
 
 </div>
-
 
 <script>
 
-let data={}
-let step=1
+let basePrice = 50000
 
-function updateBar(){
+let shape
+let length = 3
+let material
+let countertop
+let hardware
 
-document.getElementById("bar").style.width=(step*20)+"%"
+let materialPrice = 0
+let countertopPrice = 0
+let hardwarePrice = 0
 
-}
+const slider = document.getElementById("lengthSlider")
 
-function select(key,value,next){
+slider.oninput = function(){
 
-data[key]=value
-step=next-1
-updateBar()
-show(next)
+length = parseFloat(this.value)
 
-}
-
-function show(id){
-
-document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"))
-
-document.getElementById("s"+id).classList.add("active")
+document.getElementById("lengthValue").innerHTML = length + " м"
 
 }
 
-function next(){
+function nextStep(n){
 
-data.size=document.getElementById("size").value
+document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
 
-step=4
-updateBar()
-
-show(5)
+document.getElementById('step'+n).classList.add('active')
 
 }
 
-function send(){
+function setShape(value){
 
-data.name=document.getElementById("name").value
-data.phone=document.getElementById("phone").value
+shape = value
 
-Telegram.WebApp.sendData(JSON.stringify(data))
+nextStep(2)
+
+}
+
+function setMaterial(name,price){
+
+material = name
+
+materialPrice = price
+
+nextStep(4)
+
+}
+
+function setCountertop(name,price){
+
+countertop = name
+
+countertopPrice = price
+
+nextStep(5)
+
+}
+
+function setHardware(name,price){
+
+hardware = name
+
+hardwarePrice = price
+
+calculate()
+
+}
+
+function calculate(){
+
+let total = (basePrice + materialPrice + countertopPrice + hardwarePrice) * length
+
+document.getElementById("result").innerHTML =
+Math.round(total).toLocaleString()+" ₽"
+
+nextStep(6)
+
+}
+
+function sendLead(){
+
+let name = document.getElementById("name").value
+
+let phone = document.getElementById("phone").value
+
+let text = `
+Новый расчет кухни
+
+Форма: ${shape}
+Длина: ${length} м
+Материал: ${material}
+Столешница: ${countertop}
+Фурнитура: ${hardware}
+
+Клиент:
+${name}
+${phone}
+`
+
+Telegram.WebApp.sendData(text)
 
 }
 
@@ -289,4 +370,3 @@ Telegram.WebApp.sendData(JSON.stringify(data))
 
 </body>
 </html>
-
