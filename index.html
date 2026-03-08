@@ -43,7 +43,11 @@ border-radius:20px;
 padding:16px;
 box-shadow:0 6px 16px rgba(0,0,0,0.08);
 cursor:pointer;
-transition:0.2s;
+transition:0.25s;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
 }
 
 .card:hover{
@@ -51,8 +55,10 @@ transform:scale(1.05);
 }
 
 .card img{
-width:140px;
+width:130px;
 border-radius:18px;
+margin-bottom:8px;
+object-fit:contain;
 }
 
 .button{
@@ -83,9 +89,14 @@ margin-top:10px;
 }
 
 .resultKitchen{
-width:220px;
-margin-top:20px;
+width:230px;
+margin-top:15px;
 border-radius:20px;
+}
+
+.hardware.active{
+border:2px solid black;
+transform:scale(1.05);
 }
 
 </style>
@@ -119,8 +130,8 @@ border-radius:20px;
 <p>П-образная</p>
 </div>
 
-<div class="card" onclick="setShape('С островом','u-shape.png')">
-<img src="u-shape.png">
+<div class="card" onclick="setShape('С островом','island.png')">
+<img src="island.png">
 <p>С островом</p>
 </div>
 
@@ -206,16 +217,24 @@ border-radius:20px;
 
 <div class="grid">
 
-<div class="card" onclick="setHardware(0)">
+<div class="card hardware" onclick="setHardware(this,0)">
 <img src="boyard.png">
+<p>Boyard</p>
 </div>
 
-<div class="card" onclick="setHardware(20000)">
+<div class="card hardware" onclick="setHardware(this,20000)">
 <img src="gtv.png">
+<p>GTV</p>
 </div>
 
-<div class="card" onclick="setHardware(40000)">
+<div class="card hardware" onclick="setHardware(this,30000)">
+<img src="hettich.png">
+<p>Hettich</p>
+</div>
+
+<div class="card hardware" onclick="setHardware(this,40000)">
 <img src="blum.png">
+<p>Blum</p>
 </div>
 
 </div>
@@ -307,10 +326,19 @@ nextStep(5)
 
 }
 
-function setHardware(price){
+function setHardware(el,price){
+
+document.querySelectorAll('.hardware').forEach(c=>{
+c.classList.remove('active')
+})
+
+el.classList.add('active')
 
 hardwarePrice=price
+
+setTimeout(()=>{
 calculate()
+},300)
 
 }
 
