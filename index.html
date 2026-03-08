@@ -1,11 +1,8 @@
 <!DOCTYPE html>
-
 <html lang="ru">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Калькулятор кухни</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -16,12 +13,22 @@ body{
 font-family:-apple-system,BlinkMacSystemFont;
 background:#f2f2f5;
 margin:0;
+overflow-x:hidden;
 }
 
 .container{
 max-width:520px;
 margin:auto;
 padding:20px;
+position:relative;
+}
+
+.screen{
+position:absolute;
+width:100%;
+left:0;
+top:0;
+transition:transform .35s ease, opacity .35s ease;
 }
 
 h2{
@@ -36,85 +43,69 @@ gap:16px;
 }
 
 .card{
-
 background:white;
 border-radius:22px;
 padding:12px;
 box-shadow:0 10px 25px rgba(0,0,0,0.08);
 text-align:center;
 position:relative;
-transition:all .25s cubic-bezier(.34,1.56,.64,1);
-
+transition:transform .15s ease, box-shadow .15s ease, border .2s ease;
 }
 
-.card img{
-
-width:100%;
-border-radius:14px;
-
-}
-
-.card:hover{
-
-transform:scale(1.03);
-
+.card:active{
+transform:scale(.95);
 }
 
 .card.selected{
-
 border:3px solid #007aff;
-transform:scale(1.08);
+transform:scale(1.05);
+}
 
+.card img{
+width:100%;
+height:90px;
+object-fit:contain;
 }
 
 .check{
-
 position:absolute;
 top:10px;
 right:10px;
 background:#007aff;
 color:white;
-width:28px;
-height:28px;
+width:26px;
+height:26px;
 border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
 font-size:16px;
 opacity:0;
-transform:scale(0.5);
-transition:all .25s;
-
+transform:scale(.5);
+transition:.2s;
 }
 
 .card.selected .check{
-
 opacity:1;
 transform:scale(1);
-
 }
 
 .center{
-
 grid-column:span 2;
 width:60%;
 margin:auto;
-
 }
 
 input{
-
 width:100%;
 padding:14px;
 border-radius:12px;
 border:none;
 margin-bottom:12px;
 font-size:16px;
-
 }
 
 button{
-
 background:#007aff;
 color:white;
 border:none;
@@ -122,20 +113,16 @@ padding:16px;
 width:100%;
 border-radius:16px;
 font-size:18px;
-
 }
 
 .result{
-
 background:white;
 border-radius:20px;
 padding:20px;
 box-shadow:0 10px 25px rgba(0,0,0,.1);
-
 }
 
 .progress{
-
 position:fixed;
 bottom:0;
 left:0;
@@ -143,18 +130,16 @@ height:6px;
 background:#007aff;
 width:0%;
 transition:.3s;
-
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-<div id="screen1">
+<div id="screen1" class="screen">
 
 <h2>Форма кухни</h2>
 
@@ -185,10 +170,10 @@ transition:.3s;
 </div>
 
 </div>
-
 </div>
 
-<div id="screen2" style="display:none">
+
+<div id="screen2" class="screen" style="display:none">
 
 <h2>Длина кухни (м)</h2>
 
@@ -198,7 +183,8 @@ transition:.3s;
 
 </div>
 
-<div id="screen3" style="display:none">
+
+<div id="screen3" class="screen" style="display:none">
 
 <h2>Материал фасадов</h2>
 
@@ -235,10 +221,10 @@ transition:.3s;
 </div>
 
 </div>
-
 </div>
 
-<div id="screen4" style="display:none">
+
+<div id="screen4" class="screen" style="display:none">
 
 <h2>Столешница</h2>
 
@@ -253,7 +239,7 @@ transition:.3s;
 <div class="card" onclick="selectCounter(this,'Компакт',30000)">
 <div class="check">✓</div>
 <img src="counter_hpl.png">
-<p>Компакт плита</p>
+<p>Компакт</p>
 </div>
 
 <div class="card center" onclick="selectCounter(this,'Камень',40000)">
@@ -263,10 +249,10 @@ transition:.3s;
 </div>
 
 </div>
-
 </div>
 
-<div id="screen5" style="display:none">
+
+<div id="screen5" class="screen" style="display:none">
 
 <h2>Фурнитура</h2>
 
@@ -297,17 +283,16 @@ transition:.3s;
 </div>
 
 </div>
-
 </div>
 
-<div id="screen6" style="display:none">
+
+<div id="screen6" class="screen" style="display:none">
 
 <h2>Стоимость кухни</h2>
 
 <div class="result">
 
 <p id="summary"></p>
-
 <h1 id="price"></h1>
 
 </div>
@@ -332,77 +317,86 @@ transition:.3s;
 <script>
 
 let data={}
+let currentScreen=1
+
+function vibrate(){
+if(window.Telegram?.WebApp?.HapticFeedback){
+Telegram.WebApp.HapticFeedback.impactOccurred("light")
+}
+}
 
 function clearCards(){
-
 document.querySelectorAll(".card").forEach(c=>c.classList.remove("selected"))
-
 }
 
 function selectKitchen(el,val){
-
+vibrate()
 clearCards()
 el.classList.add("selected")
-
 data.kitchen=val
-
-setTimeout(()=>show(2),400)
-
+setTimeout(()=>show(2),300)
 }
 
 function next2(){
-
-data.length=document.getElementById("length").value
-
+let len=document.getElementById("length").value
+if(!len){
+alert("Введите длину кухни")
+return
+}
+data.length=parseFloat(len)
 show(3)
-
 }
 
 function selectMaterial(el,val,price){
-
+vibrate()
 clearCards()
 el.classList.add("selected")
-
 data.material=val
 data.materialPrice=price
-
-setTimeout(()=>show(4),400)
-
+setTimeout(()=>show(4),300)
 }
 
 function selectCounter(el,val,price){
-
+vibrate()
 clearCards()
 el.classList.add("selected")
-
 data.counter=val
 data.counterPrice=price
-
-setTimeout(()=>show(5),400)
-
+setTimeout(()=>show(5),300)
 }
 
 function selectFurn(el,val,price){
-
+vibrate()
 clearCards()
 el.classList.add("selected")
-
 data.furn=val
 data.furnPrice=price
-
-setTimeout(()=>result(),400)
-
+setTimeout(()=>result(),300)
 }
 
 function show(n){
 
-for(let i=1;i<=6;i++){
+let old=document.getElementById("screen"+currentScreen)
+let next=document.getElementById("screen"+n)
 
-document.getElementById("screen"+i).style.display="none"
+old.style.transform="translateX(-100%)"
+old.style.opacity="0"
 
-}
+setTimeout(()=>{
+old.style.display="none"
 
-document.getElementById("screen"+n).style.display="block"
+next.style.display="block"
+next.style.transform="translateX(100%)"
+next.style.opacity="0"
+
+setTimeout(()=>{
+next.style.transform="translateX(0)"
+next.style.opacity="1"
+},20)
+
+},200)
+
+currentScreen=n
 
 document.getElementById("progress").style.width=(n*16)+"%"
 
@@ -411,8 +405,7 @@ document.getElementById("progress").style.width=(n*16)+"%"
 function result(){
 
 let base=35000
-
-let length=parseFloat(data.length)
+let length=data.length
 
 if(data.kitchen=="Остров"){
 length=length+1
@@ -423,7 +416,6 @@ let total=(base+data.materialPrice+data.counterPrice+data.furnPrice)*length
 show(6)
 
 document.getElementById("summary").innerHTML=
-
 `Форма: ${data.kitchen}<br>
 Материал: ${data.material}<br>
 Столешница: ${data.counter}<br>
@@ -431,7 +423,6 @@ document.getElementById("summary").innerHTML=
 Длина: ${data.length} м`
 
 document.getElementById("price").innerText=
-
 total.toLocaleString()+" ₽"
 
 }
@@ -442,7 +433,6 @@ let name=document.getElementById("name").value
 let phone=document.getElementById("phone").value
 
 let message=
-
 `Заявка с калькулятора
 
 Имя: ${name}
@@ -461,9 +451,7 @@ alert("Заявка отправлена")
 }
 
 function restart(){
-
 location.reload()
-
 }
 
 </script>
