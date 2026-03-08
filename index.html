@@ -18,9 +18,11 @@ text-align:center;
 }
 
 .logo{
-width:220px;
+width:180px;
 margin-top:20px;
 }
+
+/* ЭКРАНЫ */
 
 .screen{
 display:none;
@@ -31,19 +33,23 @@ padding:20px;
 display:block;
 }
 
+/* СЕТКА */
+
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:16px;
+gap:14px;
 }
+
+/* КАРТОЧКИ */
 
 .card{
 background:white;
 border-radius:20px;
-padding:16px;
-box-shadow:0 6px 16px rgba(0,0,0,0.08);
+padding:18px;
+box-shadow:0 8px 18px rgba(0,0,0,0.08);
 cursor:pointer;
-transition:0.25s;
+transition:.25s;
 display:flex;
 flex-direction:column;
 align-items:center;
@@ -51,15 +57,28 @@ justify-content:center;
 }
 
 .card:hover{
-transform:scale(1.05);
+transform:scale(1.04);
 }
 
 .card img{
-width:130px;
-border-radius:18px;
-margin-bottom:8px;
+width:120px;
 object-fit:contain;
+margin-bottom:8px;
 }
+
+/* ФУРНИТУРА */
+
+.hardware img{
+width:90px;
+height:50px;
+}
+
+.hardware.active{
+border:2px solid black;
+transform:scale(1.05);
+}
+
+/* КНОПКИ */
 
 .button{
 background:black;
@@ -70,6 +89,8 @@ margin-top:20px;
 cursor:pointer;
 }
 
+/* INPUT */
+
 input, textarea{
 width:100%;
 padding:12px;
@@ -78,9 +99,13 @@ border:1px solid #ddd;
 margin-top:10px;
 }
 
+/* СЛАЙДЕР */
+
 .slider{
 width:100%;
 }
+
+/* ЦЕНА */
 
 .price{
 font-size:34px;
@@ -89,14 +114,27 @@ margin-top:10px;
 }
 
 .resultKitchen{
-width:230px;
+width:220px;
 margin-top:15px;
-border-radius:20px;
+border-radius:18px;
 }
 
-.hardware.active{
-border:2px solid black;
-transform:scale(1.05);
+/* ПРОГРЕСС БАР */
+
+.progressBar{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+height:6px;
+background:#ddd;
+}
+
+.progress{
+height:6px;
+width:0%;
+background:black;
+transition:.3s;
 }
 
 </style>
@@ -161,25 +199,11 @@ transform:scale(1.05);
 
 <div class="grid">
 
-<div class="card" onclick="setMaterial(0)">
-<p>ЛДСП</p>
-</div>
-
-<div class="card" onclick="setMaterial(20000)">
-<p>МДФ плёнка</p>
-</div>
-
-<div class="card" onclick="setMaterial(40000)">
-<p>МДФ пластик</p>
-</div>
-
-<div class="card" onclick="setMaterial(60000)">
-<p>МДФ эмаль</p>
-</div>
-
-<div class="card" onclick="setMaterial(80000)">
-<p>Шпон</p>
-</div>
+<div class="card" onclick="setMaterial(0)">ЛДСП</div>
+<div class="card" onclick="setMaterial(20000)">МДФ плёнка</div>
+<div class="card" onclick="setMaterial(40000)">МДФ пластик</div>
+<div class="card" onclick="setMaterial(60000)">МДФ эмаль</div>
+<div class="card" onclick="setMaterial(80000)">Шпон</div>
 
 </div>
 
@@ -193,17 +217,9 @@ transform:scale(1.05);
 
 <div class="grid">
 
-<div class="card" onclick="setCountertop(10000)">
-<p>ЛДСП</p>
-</div>
-
-<div class="card" onclick="setCountertop(30000)">
-<p>Компакт HPL</p>
-</div>
-
-<div class="card" onclick="setCountertop(40000)">
-<p>Камень</p>
-</div>
+<div class="card" onclick="setCountertop(10000)">ЛДСП</div>
+<div class="card" onclick="setCountertop(30000)">Компакт HPL</div>
+<div class="card" onclick="setCountertop(40000)">Камень</div>
 
 </div>
 
@@ -264,15 +280,17 @@ transform:scale(1.05);
 <h2>Ваши контакты</h2>
 
 <input id="name" placeholder="Имя">
-
 <input id="phone" placeholder="Телефон">
-
 <textarea id="comment" placeholder="Комментарий"></textarea>
 
-<div class="button" onclick="sendLead()">
-Отправить
+<div class="button" onclick="sendLead()">Отправить</div>
+
 </div>
 
+<!-- ПРОГРЕСС -->
+
+<div class="progressBar">
+<div class="progress" id="progress"></div>
 </div>
 
 <script>
@@ -296,10 +314,19 @@ document.getElementById("lengthValue").innerHTML = length + " м"
 
 }
 
+function updateProgress(step){
+
+let percent = (step-1)/6*100
+document.getElementById("progress").style.width = percent + "%"
+
+}
+
 function nextStep(n){
 
 document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
 document.getElementById('step'+n).classList.add('active')
+
+updateProgress(n)
 
 }
 
@@ -376,6 +403,8 @@ let text=`
 Telegram.WebApp.sendData(text)
 
 }
+
+updateProgress(1)
 
 </script>
 
