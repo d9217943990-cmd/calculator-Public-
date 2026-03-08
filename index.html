@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Калькулятор кухни</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -49,7 +51,7 @@ padding:12px;
 box-shadow:0 10px 25px rgba(0,0,0,0.08);
 text-align:center;
 position:relative;
-transition:transform .15s ease, box-shadow .15s ease, border .2s ease;
+transition:transform .15s ease, border .2s ease;
 }
 
 .card:active{
@@ -122,6 +124,12 @@ padding:20px;
 box-shadow:0 10px 25px rgba(0,0,0,.1);
 }
 
+.result img{
+width:100%;
+border-radius:16px;
+margin-bottom:15px;
+}
+
 .progress{
 position:fixed;
 bottom:0;
@@ -133,6 +141,7 @@ transition:.3s;
 }
 
 </style>
+
 </head>
 
 <body>
@@ -292,7 +301,10 @@ transition:.3s;
 
 <div class="result">
 
+<img id="kitchenImg">
+
 <p id="summary"></p>
+
 <h1 id="price"></h1>
 
 </div>
@@ -413,9 +425,19 @@ length=length+1
 
 let total=(base+data.materialPrice+data.counterPrice+data.furnPrice)*length
 
+let img=""
+
+if(data.kitchen=="Прямая"){img="straight.png"}
+if(data.kitchen=="Угловая"){img="corner.png"}
+if(data.kitchen=="П-образная"){img="u-shape.png"}
+if(data.kitchen=="Остров"){img="island.png"}
+
+document.getElementById("kitchenImg").src=img
+
 show(6)
 
 document.getElementById("summary").innerHTML=
+
 `Форма: ${data.kitchen}<br>
 Материал: ${data.material}<br>
 Столешница: ${data.counter}<br>
