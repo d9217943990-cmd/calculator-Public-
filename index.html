@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Калькулятор кухни</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -10,213 +10,148 @@
 <style>
 
 body{
-font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-background:#f2f2f7;
+font-family:-apple-system,BlinkMacSystemFont;
+background:#f3f3f5;
 margin:0;
-padding:0;
-text-align:center;
-overflow-x:hidden;
 }
 
-.logo{
-width:170px;
-margin-top:20px;
-}
-
-/* ЭКРАНЫ */
-
-.screen{
-display:none;
+.container{
+max-width:500px;
+margin:auto;
 padding:20px;
-opacity:0;
-transform:translateX(40px);
-transition:.35s;
 }
 
-.screen.active{
-display:block;
-opacity:1;
-transform:translateX(0);
+h2{
+text-align:center;
+margin-bottom:20px;
 }
 
-/* СЕТКА */
-
-.grid{
+.cards{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:14px;
+gap:16px;
 }
-
-/* КАРТОЧКИ */
 
 .card{
 background:white;
-border-radius:20px;
-padding:14px;
-box-shadow:0 8px 18px rgba(0,0,0,0.08);
-cursor:pointer;
-transition:.25s;
+border-radius:22px;
+padding:10px;
+box-shadow:0 8px 20px rgba(0,0,0,0.1);
+text-align:center;
 position:relative;
-}
-
-.card:hover{
-transform:scale(1.04);
+transition:.3s;
 }
 
 .card img{
 width:100%;
-border-radius:14px;
-margin-bottom:8px;
+border-radius:16px;
 }
 
-/* ВЫБОР */
+.card:hover{
+transform:scale(1.03);
+}
 
 .card.selected{
-border:2px solid black;
-transform:scale(1.05);
+border:3px solid #007aff;
 }
 
-.card.selected::after{
-content:"✓";
+.check{
 position:absolute;
 top:10px;
-right:12px;
-background:black;
+right:10px;
+background:#007aff;
 color:white;
-width:24px;
-height:24px;
+width:26px;
+height:26px;
 border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:14px;
+font-size:16px;
+display:none;
 }
 
-.wide{
-grid-column:1 / span 2;
-max-width:55%;
+.card.selected .check{
+display:flex;
+}
+
+.center{
+grid-column:span 2;
+width:60%;
 margin:auto;
 }
 
-/* ФУРНИТУРА */
-
-.hardware img{
-width:90px;
-height:50px;
-object-fit:contain;
-}
-
-/* КНОПКИ */
-
-.button{
-background:black;
-color:white;
+input{
+width:100%;
 padding:14px;
-border-radius:14px;
-margin-top:20px;
-cursor:pointer;
+border-radius:12px;
+border:none;
+margin-bottom:10px;
+font-size:16px;
 }
 
-.button.secondary{
-background:#ddd;
-color:black;
-}
-
-/* INPUT */
-
-input, textarea{
+button{
+background:#007aff;
+color:white;
+border:none;
+padding:16px;
 width:100%;
-padding:12px;
-border-radius:10px;
-border:1px solid #ddd;
-margin-top:10px;
+border-radius:16px;
+font-size:18px;
 }
 
-/* СЛАЙДЕР */
-
-.slider{
-width:100%;
-}
-
-/* ПРОЕКТ */
-
-.projectCard{
+.result{
 background:white;
 border-radius:20px;
 padding:20px;
-box-shadow:0 10px 30px rgba(0,0,0,0.12);
-margin-top:15px;
-}
-
-.projectCard img{
-width:200px;
-margin-bottom:15px;
-}
-
-.projectRow{
-display:flex;
-justify-content:space-between;
-margin:6px 0;
-font-size:15px;
-}
-
-.price{
-font-size:34px;
-font-weight:bold;
-margin-top:10px;
-}
-
-/* ПРОГРЕСС */
-
-.progressBar{
-position:fixed;
-bottom:0;
-left:0;
-width:100%;
-height:6px;
-background:#ddd;
+box-shadow:0 10px 25px rgba(0,0,0,.1);
 }
 
 .progress{
+position:fixed;
+bottom:0;
+left:0;
 height:6px;
-width:0%;
-background:black;
+background:#007aff;
 transition:.3s;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<img src="logo.png" class="logo">
+<div class="container">
 
-<!-- ШАГ 1 -->
+<!-- ФОРМА КУХНИ -->
 
-<div class="screen active" id="step1">
+<div id="screen1">
 
 <h2>Форма кухни</h2>
 
-<div class="grid">
+<div class="cards">
 
-<div class="card" onclick="setShape(this,'Прямая','straight.png')">
-<img src="straight.png">
+<div class="card" onclick="selectKitchen(this,'Прямая')">
+<div class="check">✓</div>
+<img src="kitchen_straight.png">
 <p>Прямая</p>
 </div>
 
-<div class="card" onclick="setShape(this,'Угловая','corner.png')">
-<img src="corner.png">
+<div class="card" onclick="selectKitchen(this,'Угловая')">
+<div class="check">✓</div>
+<img src="kitchen_corner.png">
 <p>Угловая</p>
 </div>
 
-<div class="card" onclick="setShape(this,'П-образная','u-shape.png')">
-<img src="u-shape.png">
+<div class="card" onclick="selectKitchen(this,'П-образная')">
+<div class="check">✓</div>
+<img src="kitchen_u.png">
 <p>П-образная</p>
 </div>
 
-<div class="card" onclick="setShape(this,'С островом','island.png')">
-<img src="island.png">
+<div class="card" onclick="selectKitchen(this,'Остров')">
+<div class="check">✓</div>
+<img src="kitchen_island.png">
 <p>С островом</p>
 </div>
 
@@ -224,50 +159,55 @@ transition:.3s;
 
 </div>
 
-<!-- ШАГ 2 -->
 
-<div class="screen" id="step2">
+<!-- ДЛИНА -->
 
-<h2>Длина кухни</h2>
+<div id="screen2" style="display:none">
 
-<p id="lengthValue">3 м</p>
+<h2>Длина кухни (м)</h2>
 
-<input type="range" min="2" max="8" step="0.1" value="3" class="slider" id="lengthSlider">
+<input id="length" type="number" placeholder="например 3">
 
-<div class="button" onclick="nextStep(3)">Далее</div>
+<button onclick="next2()">Далее</button>
 
 </div>
 
-<!-- ШАГ 3 -->
 
-<div class="screen" id="step3">
+<!-- МАТЕРИАЛ -->
+
+<div id="screen3" style="display:none">
 
 <h2>Материал фасадов</h2>
 
-<div class="grid">
+<div class="cards">
 
-<div class="card" onclick="setMaterial(this,'ЛДСП',0)">
-<img src="ldsp.png">
+<div class="card" onclick="selectMaterial(this,'ЛДСП',0)">
+<div class="check">✓</div>
+<img src="ЛДСП.png">
 <p>ЛДСП</p>
 </div>
 
-<div class="card" onclick="setMaterial(this,'МДФ плёнка',20000)">
-<img src="plenka.png">
-<p>МДФ плёнка</p>
+<div class="card" onclick="selectMaterial(this,'МДФ пленка',20000)">
+<div class="check">✓</div>
+<img src="пленка.png">
+<p>МДФ пленка</p>
 </div>
 
-<div class="card" onclick="setMaterial(this,'МДФ пластик',40000)">
-<img src="plastic.png">
+<div class="card" onclick="selectMaterial(this,'МДФ пластик',40000)">
+<div class="check">✓</div>
+<img src="пластик.png">
 <p>МДФ пластик</p>
 </div>
 
-<div class="card" onclick="setMaterial(this,'МДФ эмаль',60000)">
-<img src="emal.png">
+<div class="card" onclick="selectMaterial(this,'МДФ эмаль',50000)">
+<div class="check">✓</div>
+<img src="эмаль.png">
 <p>МДФ эмаль</p>
 </div>
 
-<div class="card wide" onclick="setMaterial(this,'Шпон',80000)">
-<img src="shpon.png">
+<div class="card center" onclick="selectMaterial(this,'Шпон',60000)">
+<div class="check">✓</div>
+<img src="Шпон.png">
 <p>Шпон</p>
 </div>
 
@@ -275,46 +215,66 @@ transition:.3s;
 
 </div>
 
-<!-- ШАГ 4 -->
 
-<div class="screen" id="step4">
+<!-- СТОЛЕШНИЦА -->
+
+<div id="screen4" style="display:none">
 
 <h2>Столешница</h2>
 
-<div class="grid">
+<div class="cards">
 
-<div class="card" onclick="setCountertop(this,'ЛДСП',10000)">ЛДСП</div>
-<div class="card" onclick="setCountertop(this,'Компакт HPL',30000)">Компакт HPL</div>
-<div class="card" onclick="setCountertop(this,'Камень',40000)">Камень</div>
+<div class="card" onclick="selectCounter(this,'ЛДСП',10000)">
+<div class="check">✓</div>
+<img src="counter_ldsp.png">
+<p>ЛДСП</p>
+</div>
 
+<div class="card" onclick="selectCounter(this,'Компакт',30000)">
+<div class="check">✓</div>
+<img src="counter_hpl.png">
+<p>Компакт</p>
+</div>
+
+<div class="card center" onclick="selectCounter(this,'Камень',40000)">
+<div class="check">✓</div>
+<img src="counter_stone.png">
+<p>Камень</p>
 </div>
 
 </div>
 
-<!-- ШАГ 5 -->
+</div>
 
-<div class="screen" id="step5">
+
+<!-- ФУРНИТУРА -->
+
+<div id="screen5" style="display:none">
 
 <h2>Фурнитура</h2>
 
-<div class="grid">
+<div class="cards">
 
-<div class="card hardware" onclick="setHardware(this,'Boyard',0)">
+<div class="card" onclick="selectFurn(this,'Boyard',0)">
+<div class="check">✓</div>
 <img src="boyard.png">
 <p>Boyard</p>
 </div>
 
-<div class="card hardware" onclick="setHardware(this,'GTV',20000)">
+<div class="card" onclick="selectFurn(this,'GTV',20000)">
+<div class="check">✓</div>
 <img src="gtv.png">
 <p>GTV</p>
 </div>
 
-<div class="card hardware" onclick="setHardware(this,'Hettich',30000)">
+<div class="card" onclick="selectFurn(this,'Hettich',30000)">
+<div class="check">✓</div>
 <img src="hettich.png">
 <p>Hettich</p>
 </div>
 
-<div class="card hardware" onclick="setHardware(this,'Blum',40000)">
+<div class="card" onclick="selectFurn(this,'Blum',40000)">
+<div class="check">✓</div>
 <img src="blum.png">
 <p>Blum</p>
 </div>
@@ -323,181 +283,137 @@ transition:.3s;
 
 </div>
 
+
 <!-- РЕЗУЛЬТАТ -->
 
-<div class="screen" id="step6">
+<div id="screen6" style="display:none">
 
-<h2>Ваш проект кухни</h2>
+<h2>Стоимость кухни</h2>
 
-<div class="projectCard">
+<div class="result">
 
-<img id="resultKitchen">
+<p id="summary"></p>
 
-<div class="projectRow">
-<span>Форма</span>
-<span id="resShape"></span>
-</div>
-
-<div class="projectRow">
-<span>Длина</span>
-<span id="resLength"></span>
-</div>
-
-<div class="projectRow">
-<span>Фасады</span>
-<span id="resMaterial"></span>
-</div>
-
-<div class="projectRow">
-<span>Столешница</span>
-<span id="resTop"></span>
-</div>
-
-<div class="projectRow">
-<span>Фурнитура</span>
-<span id="resHardware"></span>
-</div>
-
-<div class="price" id="result"></div>
+<h1 id="price"></h1>
 
 </div>
 
-<div class="button" onclick="nextStep(7)">
-Получить индивидуальный расчет
-</div>
+<br>
 
-<div class="button secondary" onclick="resetCalculator()">
-Пересчитать кухню
-</div>
-
-</div>
-
-<!-- КОНТАКТЫ -->
-
-<div class="screen" id="step7">
-
-<h2>Ваши контакты</h2>
-
-<input id="name" placeholder="Имя">
+<input id="name" placeholder="Ваше имя">
 <input id="phone" placeholder="Телефон">
-<textarea id="comment" placeholder="Комментарий"></textarea>
 
-<div class="button" onclick="sendLead()">Отправить</div>
+<button onclick="send()">Получить индивидуальный расчет</button>
+
+<br><br>
+
+<button onclick="restart()">Пересчитать кухню</button>
 
 </div>
 
-<div class="progressBar">
+</div>
+
 <div class="progress" id="progress"></div>
-</div>
+
 
 <script>
 
-let basePrice=35000
+let data={}
 
-let shape,shapeImage
-let length=3
-let material,materialPrice
-let countertop,countertopPrice
-let hardware,hardwarePrice
-
-const slider=document.getElementById("lengthSlider")
-
-slider.oninput=function(){
-length=parseFloat(this.value)
-document.getElementById("lengthValue").innerHTML=length+" м"
+function clearCards(){
+document.querySelectorAll(".card").forEach(c=>c.classList.remove("selected"))
 }
 
-function updateProgress(step){
-let percent=(step-1)/6*100
-document.getElementById("progress").style.width=percent+"%"
+function selectKitchen(el,val){
+clearCards()
+el.classList.add("selected")
+data.kitchen=val
+setTimeout(()=>show(2),400)
 }
 
-function nextStep(n){
-document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
-setTimeout(()=>{document.getElementById('step'+n).classList.add('active')},50)
-updateProgress(n)
+function next2(){
+data.length=document.getElementById("length").value
+show(3)
 }
 
-function selectCard(el){
-let parent=el.parentNode
-parent.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'))
-el.classList.add('selected')
+function selectMaterial(el,val,price){
+clearCards()
+el.classList.add("selected")
+data.material=val
+data.materialPrice=price
+setTimeout(()=>show(4),400)
 }
 
-function setShape(el,name,image){
-selectCard(el)
-shape=name
-shapeImage=image
-setTimeout(()=>nextStep(2),300)
+function selectCounter(el,val,price){
+clearCards()
+el.classList.add("selected")
+data.counter=val
+data.counterPrice=price
+setTimeout(()=>show(5),400)
 }
 
-function setMaterial(el,name,price){
-selectCard(el)
-material=name
-materialPrice=price
-setTimeout(()=>nextStep(4),300)
+function selectFurn(el,val,price){
+clearCards()
+el.classList.add("selected")
+data.furn=val
+data.furnPrice=price
+setTimeout(()=>result(),400)
 }
 
-function setCountertop(el,name,price){
-selectCard(el)
-countertop=name
-countertopPrice=price
-setTimeout(()=>nextStep(5),300)
+function show(n){
+for(let i=1;i<=6;i++){
+document.getElementById("screen"+i).style.display="none"
+}
+document.getElementById("screen"+n).style.display="block"
+document.getElementById("progress").style.width=(n*16)+"%"
 }
 
-function setHardware(el,name,price){
-selectCard(el)
-hardware=name
-hardwarePrice=price
-setTimeout(()=>calculate(),300)
-}
+function result(){
 
-function calculate(){
+let base=35000
 
-let total=(basePrice+materialPrice+countertopPrice+hardwarePrice)*length
+let total=(base+data.materialPrice+data.counterPrice+data.furnPrice)*data.length
 
-document.getElementById("result").innerHTML=Math.round(total).toLocaleString()+" ₽"
+show(6)
 
-document.getElementById("resultKitchen").src=shapeImage
-document.getElementById("resShape").innerHTML=shape
-document.getElementById("resLength").innerHTML=length+" м"
-document.getElementById("resMaterial").innerHTML=material
-document.getElementById("resTop").innerHTML=countertop
-document.getElementById("resHardware").innerHTML=hardware
+document.getElementById("summary").innerHTML=`
+Форма: ${data.kitchen}<br>
+Материал: ${data.material}<br>
+Столешница: ${data.counter}<br>
+Фурнитура: ${data.furn}<br>
+Длина: ${data.length} м
+`
 
-nextStep(6)
+document.getElementById("price").innerText=total.toLocaleString()+" ₽"
 
 }
 
-function resetCalculator(){
-location.reload()
-}
-
-function sendLead(){
+function send(){
 
 let name=document.getElementById("name").value
 let phone=document.getElementById("phone").value
-let comment=document.getElementById("comment").value
 
-let text=`Новый расчет кухни
-
-Форма: ${shape}
-Длина: ${length} м
-Фасады: ${material}
-Столешница: ${countertop}
-Фурнитура: ${hardware}
+let message=
+`Заявка с калькулятора
 
 Имя: ${name}
 Телефон: ${phone}
 
-Комментарий: ${comment}
-`
+Кухня: ${data.kitchen}
+Материал: ${data.material}
+Столешница: ${data.counter}
+Фурнитура: ${data.furn}
+Длина: ${data.length} м`
 
-Telegram.WebApp.sendData(text)
+Telegram.WebApp.sendData(message)
+
+alert("Заявка отправлена")
 
 }
 
-updateProgress(1)
+function restart(){
+location.reload()
+}
 
 </script>
 
