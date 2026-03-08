@@ -1,8 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="ru">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Калькулятор кухни</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -11,12 +14,12 @@
 
 body{
 font-family:-apple-system,BlinkMacSystemFont;
-background:#f3f3f5;
+background:#f2f2f5;
 margin:0;
 }
 
 .container{
-max-width:500px;
+max-width:520px;
 margin:auto;
 padding:20px;
 }
@@ -33,64 +36,85 @@ gap:16px;
 }
 
 .card{
+
 background:white;
 border-radius:22px;
-padding:10px;
-box-shadow:0 8px 20px rgba(0,0,0,0.1);
+padding:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
 text-align:center;
 position:relative;
-transition:.3s;
+transition:all .25s cubic-bezier(.34,1.56,.64,1);
+
 }
 
 .card img{
+
 width:100%;
-border-radius:16px;
+border-radius:14px;
+
 }
 
 .card:hover{
+
 transform:scale(1.03);
+
 }
 
 .card.selected{
+
 border:3px solid #007aff;
+transform:scale(1.08);
+
 }
 
 .check{
+
 position:absolute;
 top:10px;
 right:10px;
 background:#007aff;
 color:white;
-width:26px;
-height:26px;
+width:28px;
+height:28px;
 border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
 font-size:16px;
-display:none;
+opacity:0;
+transform:scale(0.5);
+transition:all .25s;
+
 }
 
 .card.selected .check{
-display:flex;
+
+opacity:1;
+transform:scale(1);
+
 }
 
 .center{
+
 grid-column:span 2;
 width:60%;
 margin:auto;
+
 }
 
 input{
+
 width:100%;
 padding:14px;
 border-radius:12px;
 border:none;
-margin-bottom:10px;
+margin-bottom:12px;
 font-size:16px;
+
 }
 
 button{
+
 background:#007aff;
 color:white;
 border:none;
@@ -98,32 +122,37 @@ padding:16px;
 width:100%;
 border-radius:16px;
 font-size:18px;
+
 }
 
 .result{
+
 background:white;
 border-radius:20px;
 padding:20px;
 box-shadow:0 10px 25px rgba(0,0,0,.1);
+
 }
 
 .progress{
+
 position:fixed;
 bottom:0;
 left:0;
 height:6px;
 background:#007aff;
+width:0%;
 transition:.3s;
+
 }
 
 </style>
+
 </head>
 
 <body>
 
 <div class="container">
-
-<!-- ФОРМА КУХНИ -->
 
 <div id="screen1">
 
@@ -133,34 +162,31 @@ transition:.3s;
 
 <div class="card" onclick="selectKitchen(this,'Прямая')">
 <div class="check">✓</div>
-<img src="kitchen_straight.png">
+<img src="straight.png">
 <p>Прямая</p>
 </div>
 
 <div class="card" onclick="selectKitchen(this,'Угловая')">
 <div class="check">✓</div>
-<img src="kitchen_corner.png">
+<img src="corner.png">
 <p>Угловая</p>
 </div>
 
 <div class="card" onclick="selectKitchen(this,'П-образная')">
 <div class="check">✓</div>
-<img src="kitchen_u.png">
+<img src="u-shape.png">
 <p>П-образная</p>
 </div>
 
 <div class="card" onclick="selectKitchen(this,'Остров')">
 <div class="check">✓</div>
-<img src="kitchen_island.png">
+<img src="island.png">
 <p>С островом</p>
 </div>
 
 </div>
 
 </div>
-
-
-<!-- ДЛИНА -->
 
 <div id="screen2" style="display:none">
 
@@ -172,9 +198,6 @@ transition:.3s;
 
 </div>
 
-
-<!-- МАТЕРИАЛ -->
-
 <div id="screen3" style="display:none">
 
 <h2>Материал фасадов</h2>
@@ -183,40 +206,37 @@ transition:.3s;
 
 <div class="card" onclick="selectMaterial(this,'ЛДСП',0)">
 <div class="check">✓</div>
-<img src="ЛДСП.png">
+<img src="ldsp.png">
 <p>ЛДСП</p>
 </div>
 
 <div class="card" onclick="selectMaterial(this,'МДФ пленка',20000)">
 <div class="check">✓</div>
-<img src="пленка.png">
+<img src="plenka.png">
 <p>МДФ пленка</p>
 </div>
 
 <div class="card" onclick="selectMaterial(this,'МДФ пластик',40000)">
 <div class="check">✓</div>
-<img src="пластик.png">
+<img src="plastic.png">
 <p>МДФ пластик</p>
 </div>
 
 <div class="card" onclick="selectMaterial(this,'МДФ эмаль',50000)">
 <div class="check">✓</div>
-<img src="эмаль.png">
+<img src="emal.png">
 <p>МДФ эмаль</p>
 </div>
 
 <div class="card center" onclick="selectMaterial(this,'Шпон',60000)">
 <div class="check">✓</div>
-<img src="Шпон.png">
+<img src="shpon.png">
 <p>Шпон</p>
 </div>
 
 </div>
 
 </div>
-
-
-<!-- СТОЛЕШНИЦА -->
 
 <div id="screen4" style="display:none">
 
@@ -227,13 +247,13 @@ transition:.3s;
 <div class="card" onclick="selectCounter(this,'ЛДСП',10000)">
 <div class="check">✓</div>
 <img src="counter_ldsp.png">
-<p>ЛДСП</p>
+<p>ЛДСП 38мм</p>
 </div>
 
 <div class="card" onclick="selectCounter(this,'Компакт',30000)">
 <div class="check">✓</div>
 <img src="counter_hpl.png">
-<p>Компакт</p>
+<p>Компакт плита</p>
 </div>
 
 <div class="card center" onclick="selectCounter(this,'Камень',40000)">
@@ -245,9 +265,6 @@ transition:.3s;
 </div>
 
 </div>
-
-
-<!-- ФУРНИТУРА -->
 
 <div id="screen5" style="display:none">
 
@@ -283,9 +300,6 @@ transition:.3s;
 
 </div>
 
-
-<!-- РЕЗУЛЬТАТ -->
-
 <div id="screen6" style="display:none">
 
 <h2>Стоимость кухни</h2>
@@ -315,76 +329,110 @@ transition:.3s;
 
 <div class="progress" id="progress"></div>
 
-
 <script>
 
 let data={}
 
 function clearCards(){
+
 document.querySelectorAll(".card").forEach(c=>c.classList.remove("selected"))
+
 }
 
 function selectKitchen(el,val){
+
 clearCards()
 el.classList.add("selected")
+
 data.kitchen=val
+
 setTimeout(()=>show(2),400)
+
 }
 
 function next2(){
+
 data.length=document.getElementById("length").value
+
 show(3)
+
 }
 
 function selectMaterial(el,val,price){
+
 clearCards()
 el.classList.add("selected")
+
 data.material=val
 data.materialPrice=price
+
 setTimeout(()=>show(4),400)
+
 }
 
 function selectCounter(el,val,price){
+
 clearCards()
 el.classList.add("selected")
+
 data.counter=val
 data.counterPrice=price
+
 setTimeout(()=>show(5),400)
+
 }
 
 function selectFurn(el,val,price){
+
 clearCards()
 el.classList.add("selected")
+
 data.furn=val
 data.furnPrice=price
+
 setTimeout(()=>result(),400)
+
 }
 
 function show(n){
+
 for(let i=1;i<=6;i++){
+
 document.getElementById("screen"+i).style.display="none"
+
 }
+
 document.getElementById("screen"+n).style.display="block"
+
 document.getElementById("progress").style.width=(n*16)+"%"
+
 }
 
 function result(){
 
 let base=35000
 
-let total=(base+data.materialPrice+data.counterPrice+data.furnPrice)*data.length
+let length=parseFloat(data.length)
+
+if(data.kitchen=="Остров"){
+length=length+1
+}
+
+let total=(base+data.materialPrice+data.counterPrice+data.furnPrice)*length
 
 show(6)
 
-document.getElementById("summary").innerHTML=`
-Форма: ${data.kitchen}<br>
+document.getElementById("summary").innerHTML=
+
+`Форма: ${data.kitchen}<br>
 Материал: ${data.material}<br>
 Столешница: ${data.counter}<br>
 Фурнитура: ${data.furn}<br>
-Длина: ${data.length} м
-`
+Длина: ${data.length} м`
 
-document.getElementById("price").innerText=total.toLocaleString()+" ₽"
+document.getElementById("price").innerText=
+
+total.toLocaleString()+" ₽"
 
 }
 
@@ -394,6 +442,7 @@ let name=document.getElementById("name").value
 let phone=document.getElementById("phone").value
 
 let message=
+
 `Заявка с калькулятора
 
 Имя: ${name}
@@ -412,7 +461,9 @@ alert("Заявка отправлена")
 }
 
 function restart(){
+
 location.reload()
+
 }
 
 </script>
