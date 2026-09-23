@@ -51,7 +51,7 @@ padding:12px;
 box-shadow:0 10px 25px rgba(0,0,0,0.08);
 text-align:center;
 position:relative;
-transition:transform .15s ease, border .2s ease;
+transition:transform .15s ease, box-shadow .2s ease, border .2s ease;
 }
 
 .card:active{
@@ -67,6 +67,14 @@ transform:scale(1.05);
 width:100%;
 height:90px;
 object-fit:contain;
+display:block;
+}
+.furn-card img{
+width:100%;
+height:100px;
+object-fit:contain;
+padding:10px;
+box-sizing:border-box;
 }
 
 .check{
@@ -125,9 +133,11 @@ box-shadow:0 10px 25px rgba(0,0,0,.1);
 }
 
 .result img{
-width:100%;
-border-radius:16px;
-margin-bottom:15px;
+display:block;
+width:150px;
+height:110px;
+object-fit:contain;
+margin:0 auto 15px;
 }
 
 .progress{
@@ -219,13 +229,13 @@ transition:.3s;
 
 <div class="card" onclick="selectMaterial(this,'МДФ эмаль',50000)">
 <div class="check">✓</div>
-<img src="emal.png">
+<img src="plastic.png">
 <p>МДФ эмаль</p>
 </div>
 
 <div class="card center" onclick="selectMaterial(this,'Шпон',60000)">
 <div class="check">✓</div>
-<img src="shpon.png">
+<img src="plastic.png">
 <p>Шпон</p>
 </div>
 
@@ -267,25 +277,25 @@ transition:.3s;
 
 <div class="cards">
 
-<div class="card" onclick="selectFurn(this,'Boyard',0)">
+<div class="card furn-card" onclick="selectFurn(this,'Boyard',0)">
 <div class="check">✓</div>
 <img src="boyard.png">
 <p>Boyard</p>
 </div>
 
-<div class="card" onclick="selectFurn(this,'GTV',20000)">
+<div class="card furn-card" onclick="selectFurn(this,'GTV',20000)">
 <div class="check">✓</div>
 <img src="gtv.png">
 <p>GTV</p>
 </div>
 
-<div class="card" onclick="selectFurn(this,'Hettich',30000)">
+<div class="card furn-card" onclick="selectFurn(this,'Hettich',30000)">
 <div class="check">✓</div>
 <img src="hettich.png">
 <p>Hettich</p>
 </div>
 
-<div class="card" onclick="selectFurn(this,'Blum',40000)">
+<div class="card furn-card" onclick="selectFurn(this,'Blum',40000)">
 <div class="check">✓</div>
 <img src="blum.png">
 <p>Blum</p>
@@ -350,10 +360,13 @@ setTimeout(()=>show(2),300)
 }
 
 function next2(){
-let len=document.getElementById("length").value
-if(!len){
-alert("Введите длину кухни")
+let len=parseFloat(document.getElementById("length").value)
+if(!Number.isFinite(len) || len<=0){
+alert("Введите длину кухни больше 0")
 return
+}
+data.length=len
+show(3)
 }
 data.length=parseFloat(len)
 show(3)
@@ -423,7 +436,7 @@ if(data.kitchen=="Остров"){
 length=length+1
 }
 
-let total=(base+data.materialPrice+data.counterPrice+data.furnPrice)*length
+let total=(base+Number(data.materialPrice)+Number(data.counterPrice)+Number(data.furnPrice))*length
 
 let img=""
 
@@ -442,7 +455,7 @@ document.getElementById("summary").innerHTML=
 Материал: ${data.material}<br>
 Столешница: ${data.counter}<br>
 Фурнитура: ${data.furn}<br>
-Длина: ${data.length} м`
+Длина: ${length} м${data.kitchen=="Остров" ? " (включая +1 м острова)" : ""}`
 
 document.getElementById("price").innerText=
 total.toLocaleString()+" ₽"
