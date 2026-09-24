@@ -104,6 +104,16 @@ opacity:1;
 transform:scale(1);
 }
 
+.material-card p,
+.counter-card p{
+display:none;
+}
+
+.material-card,
+.counter-card{
+padding:10px;
+}
+
 .center{
 grid-column:span 2;
 width:60%;
@@ -239,7 +249,7 @@ transition:.3s;
 
 <div class="card material-card center" onclick="selectMaterial(this,'Шпон',60000)">
 <div class="check">✓</div>
-<img src="plastic.png">
+<img src="shopon.png">
 <p>Шпон</p>
 </div>
 
@@ -465,8 +475,20 @@ total.toLocaleString("ru-RU")+" ₽"
 
 function send(){
 
-let name=document.getElementById("name").value
-let phone=document.getElementById("phone").value
+let name=document.getElementById("name").value.trim()
+let phone=document.getElementById("phone").value.trim()
+
+if(!name){
+alert("Введите ваше имя")
+document.getElementById("name").focus()
+return
+}
+
+if(!phone){
+alert("Введите номер телефона")
+document.getElementById("phone").focus()
+return
+}
 
 let message=
 `Заявка с калькулятора
